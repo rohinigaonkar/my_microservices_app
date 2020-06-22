@@ -1,13 +1,5 @@
-<<<<<<< HEAD
-
 # Welcome to your CDK TypeScript project!
 
-TESTING adding new commits
-
-=======
-# Welcome to your CDK TypeScript project!
-
->>>>>>> 95169d78d0ad44d6ecd2260fc49fce2837565421
 This is a blank project for TypeScript development with CDK.
 
 The `cdk.json` file tells the CDK Toolkit how to execute your app.
