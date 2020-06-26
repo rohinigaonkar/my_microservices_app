@@ -1,9 +1,12 @@
-import * as eks from '@aws-cdk/aws-eks';
 import * as cdk from '@aws-cdk/core';
-import { NetworkStack } from './Network-stack';
+
 import * as iam from '@aws-cdk/aws-iam';
-import * as autoscaling from '@aws-cdk/aws-autoscaling';
 import * as ec2 from '@aws-cdk/aws-ec2';
+import * as autoscaling from '@aws-cdk/aws-autoscaling';
+import * as eks from '@aws-cdk/aws-eks';
+
+import { NetworkStack } from './Network-stack';
+
 
 export interface NetworkProps extends cdk.StackProps {
   parent: NetworkStack
@@ -17,7 +20,8 @@ export class BlueberryMS extends cdk.Stack {
     // ##############################################################################
     // CREATE A EKS CLUSTER FOR THE BlueberryMS MICROSERVICE IN THE NETWORK STACK VPC
     // ##############################################################################  
- 
+
+    // Import existing IAM User to be added to 
     const demoUser = iam.User.fromUserName(this, "demo", "demo");
 
     // first define the role
@@ -35,8 +39,14 @@ export class BlueberryMS extends cdk.Stack {
       outputMastersRoleArn: true,
       outputConfigCommand: true
     });
-    
-    // IAM role for our EC2 worker nodes
+
+    new eks.AwsAuth(this, "adduser", { cluster }).addUserMapping(demoUser, {
+      username: demoUser.userArn,
+      groups: ["system:masters"]
+    });
+
+
+    // IAM role for our EC2 worker nodes in Autoscaling group
     const workerRole = new iam.Role(this, 'EKSWorkerRole', {
       assumedBy: new iam.ServicePrincipal('ec2.amazonaws.com')
     });
@@ -55,10 +65,6 @@ export class BlueberryMS extends cdk.Stack {
 
     cluster.addAutoScalingGroup(onDemandASG, {});
 
-    new eks.AwsAuth(this, "adduser", { cluster }).addUserMapping(demoUser, {
-      username: demoUser.userArn,
-      groups: ["system:masters"]
-    });
 
 
 

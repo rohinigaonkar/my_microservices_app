@@ -1,5 +1,6 @@
-import * as ec2 from '@aws-cdk/aws-ec2';
 import * as cdk from '@aws-cdk/core';
+
+import * as ec2 from '@aws-cdk/aws-ec2';
 
 export interface stackProperties extends cdk.StackProps {
   envName: string;
@@ -21,5 +22,6 @@ export class NetworkStack extends cdk.Stack {
     this.vpc = new ec2.Vpc(this, env + "Vpc", {
       maxAzs: 2 // Default is all AZs in region
     });
+
   }
 }
