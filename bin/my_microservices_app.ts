@@ -16,6 +16,5 @@ const Dev_Network = new NetworkStack(app, "BaseDevNetwork", { envName: "dev-" })
 // ### APPLE Microservice - Launches EC2 instance in the Base Network VPC
 new AppleMS(app, "Dev1-AppleMS", { parent: Dev_Network, envName: "dev1-" })
 
-
 // ### BLUEBERRY Microservices - Launches EKS Cluster in the Base Network VPC
 new BlueberryMS(app, "Dev2-BlueberryMS", { parent: Dev_Network, envName: "dev2-" })

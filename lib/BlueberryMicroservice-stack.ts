@@ -29,9 +29,10 @@ export class BlueberryMS extends cdk.Stack {
       assumedBy: new iam.ArnPrincipal(demoUser.userArn)
     });
 
+    // add required policy
     clusterAdmin.addManagedPolicy(iam.ManagedPolicy.fromAwsManagedPolicyName("AdministratorAccess"));
 
-    // now define the cluster and map role to "masters" RBAC group
+    // now define the cluster with Kubectl enabled and define the MastersRole 
     const cluster = new eks.Cluster(this, "myFirstCluster", {
       vpc: props.parent.vpc,
       kubectlEnabled: true,
@@ -40,6 +41,7 @@ export class BlueberryMS extends cdk.Stack {
       outputConfigCommand: true
     });
 
+    //map role to "masters" RBAC group
     new eks.AwsAuth(this, "adduser", { cluster }).addUserMapping(demoUser, {
       username: demoUser.userArn,
       groups: ["system:masters"]
@@ -50,6 +52,8 @@ export class BlueberryMS extends cdk.Stack {
     const workerRole = new iam.Role(this, 'EKSWorkerRole', {
       assumedBy: new iam.ServicePrincipal('ec2.amazonaws.com')
     });
+
+    // Define the Autoscaling group
     const onDemandASG = new autoscaling.AutoScalingGroup(this, 'OnDemandASG', {
       vpc: props.parent.vpc,
       role: workerRole,
@@ -63,11 +67,8 @@ export class BlueberryMS extends cdk.Stack {
       updateType: autoscaling.UpdateType.ROLLING_UPDATE
     });
 
+    // Add Autoscaling Group to the EKS Cluster
     cluster.addAutoScalingGroup(onDemandASG, {});
-
-
-
-
 
   }
 }

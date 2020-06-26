@@ -19,7 +19,6 @@ export class AppleMS extends cdk.Stack {
     // CREATE AN EC2 INSTANCE FOR THE APPLE MICROSERVICE IN THE NETWORK STACK VPC
     // ##############################################################################  
 
-
       new ec2.Instance(this, env.toString() + "NodeInstance", {
         instanceName: env + "NodeInstance",
         vpc: props.parent.vpc,
