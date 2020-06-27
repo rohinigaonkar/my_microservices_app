@@ -1,3 +1,8 @@
+You can find the PPT of my session at https://www.slideshare.net/rohinigaonkar/infrastructure-as-code-with-aws-cloud-development-kit-cdk
+
+
+
+
 # Welcome to your CDK TypeScript project!
 
 This is a blank project for TypeScript development with CDK.
